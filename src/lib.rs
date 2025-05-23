@@ -100,13 +100,12 @@
 
 #![allow(dead_code, unused_variables)]
 
-extern crate cupi;
+extern crate rppal;
 
 // Using a singly-linked list to represent the chain of shift registers since
-// it accurately represents how they're physically linked together.
-use std::collections::LinkedList;
+// it accurately represents how they're physically linked together.;
 use std::cell::RefCell;
-use cupi::{CuPi, PinOutput, DigitalWrite};
+use rppal::gpio::{Gpio, OutputPin};
 
 
 struct ShiftRegister {
@@ -137,10 +136,10 @@ impl ShiftRegister {
 }
 
 pub struct Shifter {
-    pub data: PinOutput,
-    pub latch: PinOutput,
-    pub clock: PinOutput,
-    shift_registers: LinkedList<ShiftRegister>,
+    pub data: OutputPin,
+    pub latch: OutputPin,
+    pub clock: OutputPin,
+    shift_registers: Vec<ShiftRegister>,
     invert: bool,
 }
 
@@ -158,13 +157,13 @@ impl Shifter {
     /// figure out which pin is which:
     ///
     /// http://pi4j.com/images/j8header-2b-large.png
-    pub fn new(data_pin: usize, latch_pin: usize, clock_pin: usize) -> Shifter {
-        let cupi = CuPi::new().unwrap();
-        let shift_registers: LinkedList<ShiftRegister> = LinkedList::new();
+    pub fn new(data_pin: u8, latch_pin: u8, clock_pin: u8, num_shift_registers: u8) -> Shifter {
+        let gpio = Gpio::new().unwrap();
+        let shift_registers: Vec<ShiftRegister> = Vec::with_capacity(num_shift_registers as usize);
         Shifter {
-            data: cupi.pin(data_pin).unwrap().output(),
-            latch: cupi.pin(latch_pin).unwrap().output(),
-            clock: cupi.pin(clock_pin).unwrap().output(),
+            data: gpio.get(data_pin).unwrap().into_output_low(),
+            latch: gpio.get(latch_pin).unwrap().into_output_low(),
+            clock: gpio.get(clock_pin).unwrap().into_output_low(),
             shift_registers: shift_registers,
             invert: false,
         }
@@ -174,13 +173,16 @@ impl Shifter {
     /// You must specify the number of pins.
     pub fn add(&mut self, pins: u8) -> usize {
         let sr = ShiftRegister { data: 0, pins: pins };
-        self.shift_registers.push_back(sr);
+        self.shift_registers.push(sr);
         self.shift_registers.len() - 1
     }
 
     /// Sets the *data* on the shift register at the given *sr_index*.
     /// If *apply* is `true` the change will be applied immediately.
     pub fn set(&mut self, sr_index: usize, data: usize, apply: bool) {
+        
+        // let mut _sr = self.shift_registers.get_mut(sr_index).unwrap();
+        // _sr.set(data);
         for (i, sr) in self.shift_registers.iter_mut().enumerate() {
             if i == sr_index {
                 sr.set(data);
@@ -229,27 +231,30 @@ impl Shifter {
     /// Applies all current shift register states by shifting out all the stored
     /// data in each ShiftRegister object.
     pub fn apply(&mut self) {
-        self.latch.low().unwrap();
+        self.latch.set_low();
         for sr in self.shift_registers.iter() {
+            println!("Shift Register: {}", sr);
             for n in 0..sr.pins {
-                self.clock.low().unwrap();
+                print!("{}", sr.data >> n & 1);
+                self.clock.set_low();
                 if self.invert {
                     match sr.data >> n & 1 {
-                        1 => self.data.low().unwrap(),
-                        0 => self.data.high().unwrap(),
+                        1 => self.data.set_low(),
+                        0 => self.data.set_high(),
                         _ => unreachable!(),
                     }
                 } else {
                     match sr.data >> n & 1 {
-                        0 => self.data.low().unwrap(),
-                        1 => self.data.high().unwrap(),
+                        0 => self.data.set_low(),
+                        1 => self.data.set_high(),
                         _ => unreachable!(),
                     }
                 }
-                self.clock.high().unwrap();
+                self.clock.set_high();
             }
+            print!("\n");
         }
-        self.latch.high().unwrap();
+        self.latch.set_high();
     }
 
 }

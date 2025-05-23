@@ -1,11 +1,6 @@
-#![feature(alloc_system)]
-
-extern crate alloc_system;
-extern crate cupi;
 extern crate cupi_shift;
 
 use cupi_shift::Shifter;
-use cupi::{delay_ms};
 
 /// This example toggles ("blinks") all output pins on multiple shift registers.
 ///
@@ -16,7 +11,7 @@ fn main() {
     // I like to use the last three pins on the bottom right of the RPi:
     let (data_pin, latch_pin, clock_pin) = (29, 28, 27); // MAKE SURE THESE MATCH YOUR SETUP!
     // Create our Shifter instance with the specified pins
-    let mut shifter = Shifter::new(data_pin, latch_pin, clock_pin);
+    let mut shifter = Shifter::new(data_pin, latch_pin, clock_pin, 2);
     let pins = 8; // Number of output pins on our shift registers
     // Call .add() once for each shift register in the chain...
     let sr0 = shifter.add(pins); // The values returned by .add() are just indexes
@@ -31,12 +26,12 @@ fn main() {
         shifter.set(sr0, 0b11111111, false); // All on sr0
         shifter.set(sr1, 0b11111111, true); // All on sr1
     // Applying the change as a final step is much more efficient and prevents flickering
-        delay_ms(1000);
+        std::thread::sleep(std::time::Duration::from_secs(1));
         println!("Loop {}: All OFF", i+1);
         shifter.set(sr0, 0b00000000, false); // All off sr0
         shifter.set(sr1, 0b00000000, false); // All off sr1
         shifter.apply(); // The other way to apply changes
-        delay_ms(1000);
+        std::thread::sleep(std::time::Duration::from_secs(1));
     }
 
 }

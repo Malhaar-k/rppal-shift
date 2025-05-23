@@ -15,7 +15,7 @@ exclude       = [
 ]
 
 [dependencies]
-cupi = "0.1.0"
+rppal = { version = "0.22.1"}
 
 # This makes smaller files:
 [profile.release]

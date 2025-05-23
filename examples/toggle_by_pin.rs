@@ -19,7 +19,7 @@ fn main() {
 
     // I like to use the last three pins on the bottom right of the RPi:
     let (data_pin, latch_pin, clock_pin) = (29, 28, 27); // MAKE SURE THESE MATCH YOUR SETUP!
-    let mut shifter = Shifter::new(data_pin, latch_pin, clock_pin);
+    let mut shifter = Shifter::new(data_pin, latch_pin, clock_pin, 1);
     let pins = 8; // Number of output pins on our shift registers
     let sr0 = shifter.add(pins); // Adds/tracks a new shift register
     // If you find that these states are inverted/backwards you can swap them with the `invert()` method...
@@ -28,10 +28,10 @@ fn main() {
         for i in 0..pins {
             println!("Setting pin {} HIGH", i);
             shifter.set_pin_high(sr0, i, true);
-            delay_ms(100);
+            std::thread::sleep(std::time::Duration::from_millis(100));
             println!("Setting pin {} LOW", i);
             shifter.set_pin_low(sr0, i, true);
-            delay_ms(100);
+            std::thread::sleep(std::time::Duration::from_millis(100));
         }
     }
 }
