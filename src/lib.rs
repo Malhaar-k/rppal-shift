@@ -233,9 +233,7 @@ impl Shifter {
     pub fn apply(&mut self) {
         self.latch.set_low();
         for sr in self.shift_registers.iter() {
-            println!("Shift Register: {}", sr);
             for n in 0..sr.pins {
-                print!("{}", sr.data >> n & 1);
                 self.clock.set_low();
                 if self.invert {
                     match sr.data >> n & 1 {
@@ -251,8 +249,7 @@ impl Shifter {
                     }
                 }
                 self.clock.set_high();
-            }
-            print!("\n");
+            }     
         }
         self.latch.set_high();
     }
