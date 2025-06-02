@@ -232,9 +232,12 @@ impl Shifter {
     /// data in each ShiftRegister object.
     pub fn apply(&mut self) {
         self.latch.set_low();
+        self.clock.set_low();
+        std::thread::sleep(std::time::Duration::from_millis(1));
         for sr in self.shift_registers.iter() {
             for n in 0..sr.pins {
-                self.clock.set_low();
+                
+ 
                 if self.invert {
                     match sr.data >> n & 1 {
                         1 => self.data.set_low(),
@@ -249,6 +252,10 @@ impl Shifter {
                     }
                 }
                 self.clock.set_high();
+                std::thread::sleep(std::time::Duration::from_micros(100)); 
+                self.clock.set_low();
+                std::thread::sleep(std::time::Duration::from_micros(100));
+                if self.invert{self.data.set_low(); } else {self.data.set_high();}  // Forcing it to come down. 
             }     
         }
         self.latch.set_high();
