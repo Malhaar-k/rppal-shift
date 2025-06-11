@@ -1,5 +1,5 @@
 [package]
-name = "cupi_shift"
+name = "rppal_shift"
 version = "0.1.0"
 authors = ["Dan McDougall <daniel.mcdougall@liftoffsoftware.com>"]
 license = "MIT"

@@ -1,11 +1,7 @@
-#![feature(alloc_system)]
 
-extern crate alloc_system;
-extern crate cupi;
 extern crate cupi_shift;
 
 use cupi_shift::Shifter;
-use cupi::{delay_ms};
 
 /// Ever wish you could address each of your shift register pins like they were
 /// regular GPIO pins?  You can do that with cupi_shift!
