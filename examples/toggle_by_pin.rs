@@ -1,7 +1,7 @@
 
-extern crate cupi_shift;
+extern crate rppal_shift;
 
-use cupi_shift::Shifter;
+use rppal_shift::Shifter;
 
 /// Ever wish you could address each of your shift register pins like they were
 /// regular GPIO pins?  You can do that with cupi_shift!

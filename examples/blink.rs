@@ -1,7 +1,7 @@
 
-extern crate cupi_shift;
+extern crate rppal_shift;
 
-use cupi_shift::Shifter;
+use rppal_shift::Shifter;
 
 /// This example toggles ("blinks") all output pins on a single shift register.
 /// To see an example that uses multiple shift registers see multiblink.rs

@@ -1,12 +1,11 @@
 [package]
 name = "rppal_shift"
 version = "0.1.0"
-authors = ["Dan McDougall <daniel.mcdougall@liftoffsoftware.com>"]
+authors = ["Malhaar Karandikar <malhaar.karandikar@gmail.com>"]
 license = "MIT"
 description   = "A Rust crate for manipulating shift registers via the GPIO pins on a Raspberry Pi."
-homepage      = "https://github.com/liftoff/cupi_shift"
-repository    = "https://github.com/liftoff/cupi_shift"
-documentation = "https://liftoff.github.io/cupi_shift/cupi_shift/"
+homepage      = "https://github.com/Malhaar-k/rppal-shift.git"
+repository    = "https://github.com/Malhaar-k/rppal-shift.git"
 readme        = "README.md"
 keywords      = ["raspberry", "pi", "rpi", "gpio", "shift_register"]
 exclude       = [
