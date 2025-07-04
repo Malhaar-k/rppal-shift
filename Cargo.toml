@@ -1,6 +1,7 @@
 [package]
 name = "rppal_shift"
 version = "0.1.0"
+edition = "2021"
 authors = ["Malhaar Karandikar <malhaar.karandikar@gmail.com>"]
 license = "MIT"
 description   = "A Rust crate for manipulating shift registers via the GPIO pins on a Raspberry Pi."
